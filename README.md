@@ -2,8 +2,6 @@
 
 A modern HR Performance Management Dashboard built with Next.js 14, React, and Tailwind CSS.
 
-![HR Dashboard Preview](https://via.placeholder.com/800x400?text=HR+Dashboard+Preview)
-
 ## 🚀 Features
 
 ### Core Features
