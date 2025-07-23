@@ -1,10 +1,15 @@
 'use client';
 
+import { useState } from 'react';
 import { useEmployees } from '@/hooks/useEmployees';
 import { useSearch } from '@/hooks/useSearch';
 import EmployeeCard from '@/components/dashboard/EmployeeCard';
 import SearchBar from '@/components/ui/SearchBar';
 import FilterDropdown from '@/components/ui/FilterDropdown';
+import Button from '@/components/ui/Button';
+import Modal from '@/components/ui/Modal';
+import CreateUserForm from '@/components/dashboard/CreateUserForm';
+import { getRandomRating } from '@/lib/utils';
 
 export default function Home() {
   const { employees, loading, error } = useEmployees();
@@ -12,6 +17,25 @@ export default function Home() {
     employees,
     ['fullName', 'email', 'department']
   );
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+  const handleCreateUser = (userData) => {
+    // In a real app, this would make an API call
+    const newUser = {
+      ...userData,
+      id: Date.now(),
+      fullName: `${userData.firstName} ${userData.lastName}`,
+      rating: getRandomRating(),
+      image: `https://ui-avatars.com/api/?name=${userData.firstName}+${userData.lastName}&background=random`
+    };
+    
+    // For demo purposes, just show an alert
+    alert(`Employee ${newUser.fullName} created successfully!`);
+    setIsCreateModalOpen(false);
+    
+    // In a real app, you would update the employees list
+    // setEmployees([...employees, newUser]);
+  };
 
   if (loading) {
     return (
@@ -40,6 +64,9 @@ export default function Home() {
             placeholder="Search by name, email, or department..."
           />
           <FilterDropdown filters={filters} setFilters={setFilters} />
+          <Button onClick={() => setIsCreateModalOpen(true)} variant="primary">
+            + Add Employee
+          </Button>
         </div>
       </div>
 
@@ -54,6 +81,17 @@ export default function Home() {
           ))}
         </div>
       )}
+
+      <Modal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        title="Create New Employee"
+      >
+        <CreateUserForm
+          onSubmit={handleCreateUser}
+          onCancel={() => setIsCreateModalOpen(false)}
+        />
+      </Modal>
     </div>
   );
 }
